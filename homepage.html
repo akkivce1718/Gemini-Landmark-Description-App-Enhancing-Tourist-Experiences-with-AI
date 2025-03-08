@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gemini Landmark Description App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Arial", sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+        }
+
+        header {
+            background: #fff;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .logo img {
+            height: 40px;
+            margin-right: 10px;
+        }
+
+        nav a {
+            margin: 0 15px;
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        nav a:hover {
+            color: #804338;
+        }
+
+        .popup-container {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            max-width: 430px;
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 15px;
+            z-index: 1000;
+            box-shadow: 0 6px 0 #7d725f, 0 12px 0 #845a52, 0 18px 30px rgba(0, 0, 0, 0.2);
+            border: 3px solid #6b5a3a;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .popup-container:hover {
+            transform: translate(-50%, -50%) scale(1.02);
+        }
+
+        h2 {
+            font-size: 26px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #713b31;
+            text-align: center;
+        }
+
+        .input-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: #444;
+            display: block;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ffa500;
+            border-radius: 8px;
+            font-size: 15px;
+            background-color: #fffefa;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            border-color: #80453a;
+            background-color: #fff7f3;
+            box-shadow: 0 0 10px rgba(255, 99, 71, 0.5);
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #5a5a5a;
+        }
+
+        .checkbox-group input {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+            accent-color: #7d473d;
+            margin: 0;
+        }
+
+        .checkbox-group label {
+            cursor: pointer;
+        }
+
+        .btn {
+            width: 100%;
+            background-color: #623d35;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .btn:hover {
+            background-color: #a86a57;
+            transform: translateY(-3px);
+        }
+
+        .link-text {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .link-text a {
+            color: #703328;
+            font-weight: bold;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .link-text a:hover {
+            text-decoration: underline;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 20px;
+            cursor: pointer;
+            color: #555;
+        }
+
+        .emoji-header {
+            text-align: center;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -60%);
+            }
+
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%);
+            }
+        }
+
+        #overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        /* Home Page Content */
+        .hero {
+            position: relative;
+            background: url('https://i.pinimg.com/736x/c6/76/a0/c676a0aa3faee6454c8746a0e2d66d0f.jpg') no-repeat center center/cover;
+            height: 80vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        .hero p {
+            font-size: 18px;
+            margin-top: 10px;
+        }
+
+        .btn {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 20px;
+            background: #f6f5fc;
+            color: rgb(14, 1, 1);
+            font-weight: bold;
+            font-size: 16px;
+            border-radius: 5px;
+            text-decoration: none;
+            border-radius: 20px;
+            margin-top: 20px;
+        }
+
+        .features {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 50px;
+            text-align: center;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 30%;
+        }
+
+        .feature-card img {
+            width: 150px;
+            height: 150px;
+            margin-bottom: 15px;
+        }
+
+        .footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="https://i.pinimg.com/474x/c3/d5/46/c3d546e24f48b489e3a1a85b43a37e59.jpg" alt="illustration">
+            GEMINI LANDMARK DESCRIPTION APP
+        </div>
+        <nav>
+            <a href="#">🏠 Home</a>
+            <a onclick="openLogin()">🔑 Login</a>
+            <a onclick="openSignup()">📝 Sign up</a>
+            <a href="#">&#8505; About</a>
+            <a href="#">💬 Feedback</a>
+        </nav>
+    </header>
+
+    <!-- Home Page Content -->
+    <section class="hero">
+        <div>
+            <h1>Explore Landmarks</h1>
+            <p>Discover the rich history behind every site</p>
+            <a href="#" class="btn">Try Landmark AI</a>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <!-- Your feature cards here -->
+    </section>
+
+    <footer class="footer">
+        &copy; 2025 Gemini Landmark Description App. All rights reserved.
+    </footer>
+
+    <!-- Overlay and Popups -->
+    <div id="overlay" onclick="closePopup()"></div>
+
+    <!-- Login Popup -->
+    <div class="popup-container" id="loginBox">
+        <span class="close-btn" onclick="closePopup()">✖</span>
+        <div class="emoji-header">🔑 Welcome Back!</div>
+        <h2>Login to Your Account</h2>
+        <div class="input-group">
+            <label>Email / Phone</label>
+            <input type="text" placeholder="Enter your email or phone">
+        </div>
+        <div class="input-group">
+            <label>Password</label>
+            <input type="password" placeholder="Enter your password">
+        </div>
+        <div class="checkbox-group">
+            <input type="checkbox"> I agree to the <a href="#">Terms & Privacy</a>
+        </div>
+        <button class="btn" onclick="location.href='frontend.html'">Log In</button>
+        <p class="link-text">New here? <a onclick="openSignup()">Create Account</a></p>
+    </div>
+
+    <!-- Signup Popup -->
+    <div class="popup-container" id="signupBox">
+        <span class="close-btn" onclick="closePopup()">✖</span>
+        <div class="emoji-header">✨ Join Us!</div>
+        <h2>Create Your Account</h2>
+        <div class="input-group">
+            <label>Full Name</label>
+            <input type="text" id="fullName" placeholder="Enter your full name">
+        </div>
+        <div class="input-group">
+            <label>Email</label>
+            <input type="email" id="email" placeholder="Enter your email">
+        </div>
+        <div class="input-group">
+            <label>Password</label>
+            <input type="password" id="password" placeholder="Create a strong password">
+        </div>
+        <div class="checkbox-group">
+            <input type="checkbox" id="terms">
+            <label for="terms">I agree to the <a href="#">Terms & Privacy</a></label>
+        </div>
+        <button class="btn" onclick="signUp()">Sign Up</button>
+        <p class="link-text">Already have an account? <a onclick="openLogin()">Log In</a></p>
+    </div>
+
+    <script>
+        function signUp() {
+    // Collect form data
+    const fullName = document.getElementById('fullName').value;
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+
+    // Validate form data
+    if (!fullName || !email || !password) {
+        alert('Please fill out all fields.');
+        return;
+    }
+
+    // Create an object with the form data
+    const userData = {
+        fullName: fullName,
+        email: email,
+        password: password
+    };
+
+    console.log('Form Data:', userData); // Debugging
+
+    // Send the data to the backend server
+    fetch('http://localhost:3001/signup', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(userData)
+    })
+    .then(response => {
+        console.log('Response:', response); // Debugging
+        return response.json();
+    })
+    .then(data => {
+        if (data.success) {
+            alert('Sign up successful!');
+            closePopup();
+        } else {
+            alert('Sign up failed: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error); // Debugging
+        alert('An error occurred. Please try again.');
+    });
+}
+
+        function openLogin() {
+            closePopup();
+            document.getElementById("loginBox").style.display = "block";
+            document.getElementById("overlay").style.display = "block";
+        }
+
+        function openSignup() {
+            closePopup();
+            document.getElementById("signupBox").style.display = "block";
+            document.getElementById("overlay").style.display = "block";
+        }
+
+        function closePopup() {
+            document.getElementById("loginBox").style.display = "none";
+            document.getElementById("signupBox").style.display = "none";
+            document.getElementById("overlay").style.display = "none";
+        }
+    </script>
+</body>
+</html>
