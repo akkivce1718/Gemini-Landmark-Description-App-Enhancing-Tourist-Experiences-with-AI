@@ -525,8 +525,7 @@ function openSettingsModal() {
                 language: document.getElementById('language').value,
                 darkMode: document.getElementById('themeToggle').checked,
             };
-            alert('Settings saved successfully!');
-            console.log('Settings:', settings);
+            alerlog('Settings:', settings);
             closeSettingsModal();
         }
 
@@ -536,7 +535,7 @@ function openSettingsModal() {
     descriptionDiv.style.display = "block";
 
     let imageData = capturedImage.src.split(",")[1]; // Get Base64 image
-    let apiKey = "AIzaSyA9xpMiJqT5Mbcq0ShQdDY76sMS6hMIagw";  // 🔹 Replace with your Gemini API Key
+    let apiKey = "";  // 🔹 Replace with your Gemini API Key
 
     if (!apiKey) {
         descriptionDiv.innerHTML = "⚠ API Key is missing! Please provide your API key.";
